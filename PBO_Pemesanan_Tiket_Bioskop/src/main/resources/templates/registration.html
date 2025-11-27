@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Buat Akun Baru</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: grid; place-items: center; min-height: 90vh; background-color: #f4f4f4; }
+        .register-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 30px; width: 380px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .register-card h1 { text-align: center; margin-top: 0; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input { width: 95%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .register-button { width: 100%; padding: 12px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; }
+        .error-message { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 10px; border-radius: 5px; margin-bottom: 20px; text-align: center; }
+        .login-link { text-align: center; margin-top: 20px; }
+        .login-link a { color: #007bff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="register-card">
+        <h1>Buat Akun Baru</h1>
+
+        <div th:if="${error}" class="error-message" th:text="${error}">
+            Pesan Error
+        </div>
+
+        <form th:action="@{/register}" th:object="${pelangganBaru}" method="post">
+            
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" th:field="*{username}" id="username" required />
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" th:field="*{email}" id="email" required />
+            </div>
+
+            <div class="form-group">
+                <label for="umur">Umur:</label>
+                <input type="number" th:field="*{umur}" id="umur" required />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" th:field="*{password}" id="password" required />
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Konfirmasi Password:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required />
+            </div>
+
+            <button type="submit" class="register-button">Buat Akun</button>
+        </form>
+
+        <div class="login-link">
+            Sudah punya akun? <a th:href="@{/login}">Login di sini</a>
+        </div>
+    </div>
+</body>
+</html>

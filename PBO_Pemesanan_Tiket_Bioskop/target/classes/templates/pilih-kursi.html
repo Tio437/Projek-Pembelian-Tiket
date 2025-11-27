@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pilih Kursi</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 900px; margin: 20px auto; }
+        .info { background-color: #f4f4f4; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .screen { background-color: #333; color: white; text-align: center; padding: 10px; border-radius: 5px; margin: 30px 0; font-weight: bold; }
+        
+        /* Denah Kursi */
+        .seat-layout { display: grid; grid-template-columns: repeat(10, 1fr); gap: 10px; max-width: 600px; margin: 0 auto; }
+        
+        /* Penanda Baris (A, B, C) */
+        .seat-row-label { grid-column: 1 / -1; text-align: left; font-weight: bold; margin-top: 10px; }
+        
+        /* Tampilan Kursi */
+        .seat { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 5px; background-color: #c8e6c9; /* Hijau - Tersedia */ cursor: pointer; position: relative; }
+        .seat input { /* Sembunyikan checkbox asli */ opacity: 0; position: absolute; }
+        
+        /* Kursi Dipesan (Abu-abu) */
+        .seat.booked { background-color: #bdbdbd; cursor: not-allowed; }
+        
+        /* Kursi Dipilih (Biru) */
+        .seat input:checked + .seat-label { background-color: #007bff; color: white; border-color: #007bff; }
+        
+        /* Label di dalam kursi (A1, A2) */
+        .seat-label { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; border: 2px solid #81c784; border-radius: 5px; box-sizing: border-box; }
+        .seat.booked .seat-label { border-color: #757575; }
+        
+        .legend { margin-top: 20px; }
+        .legend div { display: flex; align-items: center; margin-bottom: 5px; }
+        .legend span { width: 20px; height: 20px; border-radius: 3px; margin-right: 10px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+
+    <a href="/">&larr; Batal dan Kembali</a>
+
+    <div class="info">
+        <h1 th:text="${jadwal.film.judul}">Judul Film</h1>
+        <p>
+            <strong>Studio:</strong> 
+            <span th:text="${jadwal.studio.nomorStudio}">1</span>
+        </p>
+        <p>
+            <strong>Waktu:</strong> 
+            <span th:text="${#temporals.format(jadwal.waktuMulai, 'dd MMMM yyyy, HH:mm')}">
+                01 Januari 2025, 14:30
+            </span>
+        </p>
+    </div>
+
+    <form th:action="@{/reservasi/pesan}" method="post">
+        
+        <input type="hidden" name="jadwalId" th:value="${jadwal.id}" />
+
+        <div class="screen">LAYAR BIOSKOP</div>
+        
+        <div class="seat-layout">
+            <div th:each="kursi : ${semuaKursi}"
+                 th:classappend="${kursiDipesan.contains(kursi)} ? 'booked' : ''"
+                 class="seat">
+                
+                <input type="checkbox"
+                       th:id="'kursi-' + ${kursi.id}"
+                       name="kursiIds"
+                       th:value="${kursi.id}"
+                       th:disabled="${kursiDipesan.contains(kursi)}" />
+                
+                <label th:for="'kursi-' + ${kursi.id}" class="seat-label">
+                    <span th:text="${kursi.nomorBaris} + ${kursi.nomorKursi}">A1</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="legend" style="margin-top: 30px;">
+            <div><span style="background: #c8e6c9;"></span> Tersedia</div>
+            <div><span style="background: #007bff;"></span> Dipilih</div>
+            <div><span style="background: #bdbdbd;"></span> Dipesan</div>
+        </div>
+
+        <button type="submit" style="font-size: 1.2em; padding: 10px 20px; margin-top: 30px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Pesan Sekarang
+        </button>
+    </form>
+
+</body>
+</html>

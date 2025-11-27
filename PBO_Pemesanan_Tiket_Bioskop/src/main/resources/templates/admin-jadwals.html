@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Manajemen Jadwal</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 1000px; margin: 20px auto; }
+        h1, h2 { color: #333; }
+        .container { display: flex; gap: 40px; }
+        .form-section { flex: 1; }
+        .list-section { flex: 2; }
+        
+        /* Form Styling */
+        form { background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; padding: 20px; }
+        form div { margin-bottom: 15px; }
+        form label { display: block; margin-bottom: 5px; font-weight: bold; }
+        form input[type="datetime-local"], form input[type="number"], form select {
+            width: 95%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;
+        }
+        form button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
+        
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+
+    <h1>Panel Admin - Manajemen Jadwal Tayang</h1>
+
+    <div class="container">
+        <div class="form-section">
+            <h2>Buat Jadwal Baru</h2>
+            <form th:action="@{/admin/jadwals/save}" method="post">
+                <div>
+                    <label for="filmId">Pilih Film:</label>
+                    <select id="filmId" name="filmId" required>
+                        <option value="">-- Pilih Film --</option>
+                        <option th:each="film : ${daftarFilm}"
+                                th:value="${film.id}"
+                                th:text="${film.judul}">
+                            Judul Film
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <label for="studioId">Pilih Studio:</label>
+                    <select id="studioId" name="studioId" required>
+                        <option value="">-- Pilih Studio --</option>
+                        <option th:each="studio : ${daftarStudio}"
+                                th:value="${studio.id}"
+                                th:text="'Studio ' + ${studio.nomorStudio}">
+                            Studio 1
+                        </option>
+                    </select>
+                </div>
+                <div>
+                    <label for="waktuMulai">Waktu Mulai:</label>
+                    <input type="datetime-local" id="waktuMulai" name="waktuMulai" required />
+                </div>
+                <div>
+                    <label for="hargaTiket">Harga Tiket (Rp):</label>
+                    <input type="number" id="hargaTiket" name="hargaTiket" step="1000" required />
+                </div>
+                <div>
+                    <button type="submit">Simpan Jadwal</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="list-section">
+            <h2>Daftar Jadwal Saat Ini</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Film</th>
+                        <th>Studio</th>
+                        <th>Waktu Mulai</th>
+                        <th>Harga</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="jadwal : ${daftarJadwal}">
+                        <td th:text="${jadwal.film.judul}">Judul Film</td>
+                        <td th:text="'Studio ' + ${jadwal.studio.nomorStudio}">Studio 1</td>
+                        <td th:text="${#temporals.format(jadwal.waktuMulai, 'dd/MM/yy HH:mm')}">01/01/25 14:30</td>
+                        <td th:text="'Rp ' + ${#numbers.formatDecimal(jadwal.hargaTiket, 0, 'POINT', 0, 'COMMA')}">Rp 50.000</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

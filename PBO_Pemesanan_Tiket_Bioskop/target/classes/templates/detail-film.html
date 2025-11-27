@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${film.judul}">Detail Film</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 20px; max-width: 900px; margin: 20px auto; }
+        .film-detail { display: flex; gap: 30px; }
+        .film-poster img { max-width: 300px; border-radius: 8px; }
+        .film-info { flex: 1; }
+        .jadwal-list { margin-top: 30px; }
+        .jadwal-item { border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .jadwal-item a { text-decoration: none; background-color: #28a745; color: white; padding: 10px 15px; border-radius: 5px; font-weight: bold; }
+        .jadwal-item a:hover { background-color: #218838; }
+    </style>
+</head>
+<body>
+
+    <a href="/">&larr; Kembali ke Daftar Film</a>
+
+    <div class="film-detail" th:object="${film}">
+        <div class="film-info">
+            <h1 th:text="*{judul}">Judul Film</h1>
+            <p><strong>Genre:</strong> <span th:text="*{genre}">Genre</span></p>
+            <p><strong>Rating Usia:</strong> <span th:text="*{ratingUsia}">SU</span></p>
+            <p><strong>Durasi:</strong> <span th:text="*{durasiMenit}">120</span> menit</p>
+            <h3>Sinopsis</h3>
+            <p th:text="*{sinopsis}">Sinopsis film...</p>
+        </div>
+    </div>
+
+    <hr style="margin: 30px 0;">
+
+    <div class="jadwal-list">
+        <h2>Pilih Jadwal Tayang</h2>
+
+        <div th:if="${!daftarJadwal.isEmpty()}">
+            
+            <div class="jadwal-item" th:each="jadwal : ${daftarJadwal}">
+                <div>
+                    <strong>Studio <span th:text="${jadwal.studio.nomorStudio}">1</span></strong>
+                    <p>
+                        Waktu: 
+                        <span th:text="${#temporals.format(jadwal.waktuMulai, 'dd MMMM yyyy, HH:mm')}">
+                            01 Januari 2025, 14:30
+                        </span>
+                    </p>
+                    <p>
+                        Harga: Rp <span th:text="${#numbers.formatDecimal(jadwal.hargaTiket, 0, 'POINT', 0, 'COMMA')}">50.000</span>
+                    </p>
+                </div>
+                
+                <a th:href="@{/reservasi/{id}(id=${jadwal.id})}">
+                    Pilih Kursi
+                </a>
+            </div>
+        </div>
+
+        <div th:if="${daftarJadwal.isEmpty()}">
+            <p>Maaf, belum ada jadwal yang tersedia untuk film ini.</p>
+        </div>
+    </div>
+
+</body>
+</html>

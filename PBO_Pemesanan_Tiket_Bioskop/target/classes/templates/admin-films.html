@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Manajemen Film</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 1000px; margin: 20px auto; }
+        h1, h2 { color: #333; }
+        .container { display: flex; gap: 40px; }
+        .form-section { flex: 1; }
+        .list-section { flex: 2; }
+        
+        /* Form Styling */
+        form { background: #5f0c0c; border: 1px solid #ddd; border-radius: 8px; padding: 20px; }
+        form div { margin-bottom: 15px; }
+        form label { display: block; margin-bottom: 5px; font-weight: bold; }
+        form input[type="text"], form input[type="number"], form textarea {
+            width: 95%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;
+        }
+        form button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
+        
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHq6O3b+6Xp6l5Q5q5c5Z5Y5Z5Y5Z5" crossorigin="anonymous" referrerpolicy="no-referrer" />   
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+    <h1>Panel Admin - Manajemen Film</h1>
+
+    <div class="container">
+        <div class="form-section">
+            <h2>Tambah Film Baru</h2>
+            <form th:action="@{/admin/films/save}" th:object="${filmBaru}" method="post">
+                <div>
+                    <label for="judul">Judul:</label>
+                    <input type="text" th:field="*{judul}" id="judul" required />
+                </div>
+                <div>
+                    <label for="durasiMenit">Durasi (menit):</label>
+                    <input type="number" th:field="*{durasiMenit}" id="durasiMenit" required />
+                </div>
+                <div>
+                    <label for="genre">Genre:</label>
+                    <input type="text" th:field="*{genre}" id="genre" />
+                </div>
+                <div>
+                    <label for="ratingUsia">Rating Usia:</label>
+                    <input type="text" th:field="*{ratingUsia}" id="ratingUsia" />
+                </div>
+                <div>
+                    <label for="posterUrl">URL Poster:</label>
+                    <input type="text" th:field="*{posterUrl}" id="posterUrl" />
+                </div>
+                <div>
+                    <label for="sinopsis">Sinopsis:</label>
+                    <textarea th:field="*{sinopsis}" id="sinopsis" rows="4"></textarea>
+                </div>
+                <div>
+                    <button type="submit">Simpan Film</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="list-section">
+            <h2>Daftar Film Saat Ini</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Judul</th>
+                        <th>Durasi</th>
+                        <th>Genre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="film : ${daftarFilm}">
+                        <td th:text="${film.id}">1</td>
+                        <td th:text="${film.judul}">Judul Film</td>
+                        <td th:text="${film.durasiMenit} + ' menit'">120 menit</td>
+                        <td th:text="${film.genre}">Action</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

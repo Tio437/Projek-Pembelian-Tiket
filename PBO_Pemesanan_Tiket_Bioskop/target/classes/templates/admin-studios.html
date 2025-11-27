@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Manajemen Studio</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 1000px; margin: 20px auto; }
+        h1, h2 { color: #333; }
+        .container { display: flex; gap: 40px; }
+        .form-section { flex: 1; }
+        .list-section { flex: 2; }
+        
+        /* Form Styling */
+        form { background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; padding: 20px; }
+        form div { margin-bottom: 15px; }
+        form label { display: block; margin-bottom: 5px; font-weight: bold; }
+        form input[type="text"], form input[type="number"] {
+            width: 95%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;
+        }
+        form button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
+        
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+
+    <h1>Panel Admin - Manajemen Studio</h1>
+
+    <div class="container">
+        <div class="form-section">
+            <h2>Tambah Studio Baru</h2>
+            <form th:action="@{/admin/studios/save}" th:object="${studioBaru}" method="post">
+                <div>
+                    <label for="nomorStudio">Nomor Studio:</label>
+                    <input type="number" th:field="*{nomorStudio}" id="nomorStudio" required />
+                </div>
+                <div>
+                    <label for="kapasitas">Kapasitas Kursi:</label>
+                    <input type="number" th:field="*{kapasitas}" id="kapasitas" required />
+                </div>
+                <div>
+                    <button type="submit">Simpan Studio</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="list-section">
+            <h2>Daftar Studio Saat Ini</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nomor Studio</th>
+                        <th>Kapasitas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="studio : ${daftarStudio}">
+                        <td th:text="${studio.id}">1</td>
+                        <td th:text="${studio.nomorStudio}">1</td>
+                        <td th:text="${studio.kapasitas} + ' kursi'">100 kursi</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

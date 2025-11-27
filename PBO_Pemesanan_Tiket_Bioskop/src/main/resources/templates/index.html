@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bioskop Online</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 20px; }
+        .film-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+        .film-card { border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .film-card-content { padding: 16px; }
+        .film-card h3 { margin-top: 0; }
+        .film-card a { text-decoration: none; background-color: #007bff; color: white; padding: 8px 12px; border-radius: 4px; display: inline-block; }
+    </style>
+</head>
+<body>
+
+    <h1>Film yang Sedang Tayang</h1>
+
+    <div class="film-list" th:if="${!daftarFilm.isEmpty()}">
+        
+        <div class="film-card" th:each="film : ${daftarFilm}">
+            
+            <div class="film-card-content">
+                <h3 th:text="${film.judul}">Judul Film</h3>
+                <p th:text="${film.sinopsis}">Ini adalah sinopsis singkat film...</p>
+                <p>
+                    <strong>Durasi:</strong> 
+                    <span th:text="${film.durasiMenit}">120</span> menit
+                </p>
+                
+                <a th:href="@{/film/{id}(id=${film.id})}">
+                    Lihat Jadwal
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${daftarFilm.isEmpty()}">
+        <p>Maaf, belum ada film yang tayang saat ini.</p>
+    </div>
+
+</body>
+</html>
