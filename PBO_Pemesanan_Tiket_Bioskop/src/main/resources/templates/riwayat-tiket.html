@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Riwayat Tiket Saya</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; }
+        
+        .container { max-width: 1000px; margin: 0 auto; }
+        
+        /* Header & Navigasi */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        h1 { color: #333; margin: 0; }
+        .btn-home { text-decoration: none; background: #333; color: white; padding: 10px 20px; border-radius: 25px; font-weight: bold; font-size: 0.9em; }
+        
+        /* Grid Layout untuk Tiket */
+        .ticket-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 30px; }
+
+        /* --- DESAIN TIKET (Sama dengan E-Ticket) --- */
+        .ticket-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            transition: transform 0.2s;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .ticket-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+
+        /* Header Tiket (Merah untuk Lunas, Kuning untuk Pending) */
+        .ticket-header {
+            padding: 15px;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            letter-spacing: 1px;
+            /* Default background (akan ditimpa inline style nanti) */
+            background-color: #555; 
+        }
+        
+        .ticket-body { padding: 20px; font-family: 'Courier New', Courier, monospace; }
+        
+        .row { display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
+        .label { font-size: 0.75rem; color: #888; text-transform: uppercase; }
+        .value { font-size: 0.95rem; font-weight: bold; color: #333; }
+        
+        .seat-badges { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-end; }
+        .badge { background: #333; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; }
+
+        /* Stempel Status */
+        .status-stamp {
+            position: absolute; top: 50px; right: 20px;
+            border: 2px solid; padding: 5px 10px;
+            font-weight: bold; font-size: 1.2rem;
+            transform: rotate(-15deg); opacity: 0.8;
+        }
+        .stamp-lunas { color: #28a745; border-color: #28a745; }
+        .stamp-pending { color: #ffc107; border-color: #ffc107; }
+
+        /* Footer Aksi */
+        .ticket-footer { padding: 15px; background: #f9f9f9; text-align: center; border-top: 2px dashed #ddd; }
+        
+        .btn-pay {
+            display: block; width: 100%; text-align: center;
+            background: #ffc107; color: #333; text-decoration: none;
+            padding: 10px; border-radius: 5px; font-weight: bold;
+        }
+        .btn-print {
+            display: block; width: 100%; text-align: center;
+            background: #28a745; color: white; text-decoration: none;
+            padding: 10px; border-radius: 5px; font-weight: bold;
+        }
+
+        .empty-state { grid-column: 1 / -1; text-align: center; padding: 50px; color: #777; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <div class="header">
+            <h1>📜 Riwayat & Tiket Saya</h1>
+            <a href="/" class="btn-home">Kembali ke Beranda</a>
+        </div>
+
+        <div class="empty-state" th:if="${daftarReservasi.isEmpty()}">
+            <h2>Belum ada tiket.</h2>
+            <p>Yuk pesan film favoritmu sekarang!</p>
+        </div>
+
+        <div class="ticket-grid" th:if="${!daftarReservasi.isEmpty()}">
+            
+            <div class="ticket-card" th:each="res : ${daftarReservasi}">
+                
+                <div class="ticket-header" 
+                     th:style="${res.status == 'LUNAS' ? 'background-color:#e74c3c' : 'background-color:#f39c12'}">
+                    <span th:text="${res.status == 'LUNAS' ? 'E-TIKET BIOSKOP' : 'MENUNGGU PEMBAYARAN'}">JUDUL</span>
+                </div>
+
+                <div th:class="'status-stamp ' + (${res.status == 'LUNAS'} ? 'stamp-lunas' : 'stamp-pending')"
+                     th:text="${res.status}">
+                    LUNAS
+                </div>
+
+                <div class="ticket-body">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <span class="label">KODE BOOKING</span><br>
+                        <span class="value" style="font-size: 1.5rem; letter-spacing: 2px;" th:text="${res.kodeBooking}">XYZ123</span>
+                    </div>
+
+                    <div class="row">
+                        <span class="label">FILM</span>
+                        <span class="value" th:text="${res.jadwalTayang.film.judul}">Judul Film</span>
+                    </div>
+
+                    <div class="row">
+                        <span class="label">JADWAL TAYANG</span>
+                        <span class="value" th:text="${#temporals.format(res.jadwalTayang.waktuMulai, 'dd MMM HH:mm')}">01 Jan 12:00</span>
+                    </div>
+
+                    <div class="row">
+                        <span class="label">STUDIO</span>
+                        <span class="value" th:text="'Studio ' + ${res.jadwalTayang.studio.nomorStudio}">Studio 1</span>
+                    </div>
+
+                    <div class="row">
+                        <span class="label">KURSI</span>
+                        <div class="seat-badges">
+                            <span class="badge" th:each="kursi : ${res.kursiDipesan}" 
+                                  th:text="${kursi.nomorBaris} + ${kursi.nomorKursi}">A1</span>
+                        </div>
+                    </div>
+
+                    <div class="row" style="border: none;">
+                        <span class="label">TOTAL BAYAR</span>
+                        <span class="value" th:text="'Rp ' + ${#numbers.formatDecimal(res.totalHarga, 0, 'POINT', 0, 'COMMA')}">Rp 50.000</span>
+                    </div>
+                </div>
+
+                <div class="ticket-footer">
+                    <a th:if="${res.status != 'LUNAS'}" 
+                       th:href="@{/reservasi/pembayaran/{id}(id=${res.id})}" 
+                       class="btn-pay">
+                       💳 Lanjutkan Pembayaran
+                    </a>
+
+                    <div th:if="${res.status == 'LUNAS'}">
+                        <span style="color: #28a745; font-weight: bold; font-family: sans-serif;">✅ Siap Digunakan</span>
+                        <p style="margin: 5px 0 0 0; font-size: 0.8em; color: #777;">Tunjukkan kode booking ke petugas.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

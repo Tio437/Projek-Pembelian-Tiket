@@ -77,16 +77,28 @@
                     <tr>
                         <th>Film</th>
                         <th>Studio</th>
-                        <th>Waktu Mulai</th>
+                        <th>Waktu</th>
                         <th>Harga</th>
-                    </tr>
+                        <th>Aksi</th> </tr>
                 </thead>
                 <tbody>
                     <tr th:each="jadwal : ${daftarJadwal}">
-                        <td th:text="${jadwal.film.judul}">Judul Film</td>
-                        <td th:text="'Studio ' + ${jadwal.studio.nomorStudio}">Studio 1</td>
-                        <td th:text="${#temporals.format(jadwal.waktuMulai, 'dd/MM/yy HH:mm')}">01/01/25 14:30</td>
-                        <td th:text="'Rp ' + ${#numbers.formatDecimal(jadwal.hargaTiket, 0, 'POINT', 0, 'COMMA')}">Rp 50.000</td>
+                        <td th:text="${jadwal.film.judul}">Judul</td>
+                        <td th:text="'Studio ' + ${jadwal.studio.nomorStudio}">1</td>
+                        <td th:text="${#temporals.format(jadwal.waktuMulai, 'dd/MM/yy HH:mm')}">Time</td>
+                        <td th:text="${jadwal.hargaTiket}">Rp 0</td>
+                        <td>
+                            <a th:href="@{/admin/jadwals/edit/{id}(id=${jadwal.id})}" 
+                               style="background-color: #ffc107; color: #333; padding: 5px 10px; text-decoration: none; border-radius: 4px; margin-right: 5px;">
+                               ✏️ Edit
+                            </a>
+                            
+                            <a th:href="@{/admin/jadwals/delete/{id}(id=${jadwal.id})}" 
+                               style="background-color: #dc3545; color: white; padding: 5px 10px; text-decoration: none; border-radius: 4px;"
+                               onclick="return confirm('Yakin ingin menghapus jadwal ini?');">
+                               🗑️ Hapus
+                            </a>
+                        </td>
                     </tr>
                 </tbody>
             </table>

@@ -19,4 +19,8 @@ public class KursiService {
     public Kursi save(Kursi kursi) {
         return kursiRepository.save(kursi);
     }
+
+    public void deleteAllByStudioId(Long studioId) {
+        kursiRepository.deleteByStudioId(studioId);
+    }
 }

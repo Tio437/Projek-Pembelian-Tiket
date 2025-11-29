@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pembayaran</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 400px; text-align: center; }
+        h1 { color: #333; margin-bottom: 20px; }
+        .film-name { font-size: 1.5rem; font-weight: bold; color: #007bff; margin-bottom: 10px; }
+        .price-tag { font-size: 2.5rem; color: #28a745; font-weight: bold; margin: 20px 0; }
+        .info { text-align: left; background: #fafafa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #eee; }
+        .btn-pay { background: #007bff; color: white; border: none; padding: 15px 30px; width: 100%; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+        .btn-pay:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Konfirmasi Pembayaran</h1>
+        
+        <div class="film-name" th:text="${reservasi.jadwalTayang.film.judul}">JUDUL FILM</div>
+        
+        <div class="info">
+            <p>Jadwal: <strong th:text="${#temporals.format(reservasi.jadwalTayang.waktuMulai, 'dd MMM HH:mm')}">Time</strong></p>
+            <p>Jumlah Kursi: <strong th:text="${reservasi.kursiDipesan.size()}">2</strong></p>
+        </div>
+
+        <div>Total Bayar:</div>
+        <div class="price-tag" th:text="'Rp ' + ${#numbers.formatDecimal(reservasi.totalHarga, 0, 'POINT', 0, 'COMMA')}">
+            Rp 50.000
+        </div>
+
+        <form th:action="@{/reservasi/bayar}" method="post">
+            <input type="hidden" name="reservasiId" th:value="${reservasi.id}" />
+            <button type="submit" class="btn-pay">Bayar Sekarang</button>
+        </form>
+    </div>
+</body>
+</html>

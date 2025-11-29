@@ -25,4 +25,8 @@ public class StudioService {
     public Optional<Studio> findById(Long id) {
         return studioRepository.findById(id);
     }
+
+    public void deleteById(Long id) {
+        studioRepository.deleteById(id);
+    }
 }

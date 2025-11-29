@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Jadwal</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; max-width: 600px; margin: 40px auto; background: #f4f4f4; padding: 20px; }
+        form { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        h2 { margin-top: 0; color: #333; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; width: 100%; font-size: 1em; }
+        .back-link { display: block; text-align: center; margin-top: 20px; color: #555; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <form th:action="@{/admin/jadwals/update}" method="post">
+        <h2>✏️ Edit Jadwal Tayang</h2>
+
+        <input type="hidden" name="id" th:value="${jadwal.id}" />
+
+        <div>
+            <label>Pilih Film:</label>
+            <select name="filmId" required>
+                <option th:each="film : ${daftarFilm}"
+                        th:value="${film.id}"
+                        th:text="${film.judul}"
+                        th:selected="${film.id == jadwal.film.id}">
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <label>Pilih Studio:</label>
+            <select name="studioId" required>
+                <option th:each="studio : ${daftarStudio}"
+                        th:value="${studio.id}"
+                        th:text="'Studio ' + ${studio.nomorStudio}"
+                        th:selected="${studio.id == jadwal.studio.id}">
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <label>Waktu Mulai:</label>
+            <input type="datetime-local" name="waktuMulai" required 
+                   th:value="${jadwal.waktuMulai}" />
+        </div>
+
+        <div>
+            <label>Harga Tiket:</label>
+            <input type="number" name="hargaTiket" required 
+                   th:value="${jadwal.hargaTiket}" />
+        </div>
+
+        <button type="submit">Simpan Perubahan</button>
+    </form>
+    
+    <a href="/admin/jadwals" class="back-link">Batal dan Kembali</a>
+
+</body>
+</html>

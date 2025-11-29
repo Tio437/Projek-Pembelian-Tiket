@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>E-Tiket</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background-color: #333; display: flex; justify-content: center; padding: 50px; }
+        .ticket { background: white; width: 350px; border-radius: 10px; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.5); position: relative; }
+        
+        .header { background: #e74c3c; color: white; padding: 20px; text-align: center; border-bottom: 2px dashed white; }
+        .body { padding: 25px; }
+        
+        .row { margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .label { font-size: 0.8rem; color: #888; display: block; }
+        .value { font-size: 1.1rem; font-weight: bold; color: #333; display: block; margin-top: 3px; }
+        
+        .seats { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 5px; }
+        .badge { background: #333; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.9rem; }
+        
+        .footer { background: #f9f9f9; padding: 20px; text-align: center; border-top: 2px dashed #ddd; }
+        .enjoy-text { color: #e74c3c; font-weight: bold; font-size: 1.2rem; margin: 0; }
+        
+        /* Stempel Lunas */
+        .paid-stamp {
+            position: absolute; top: 60px; right: 20px;
+            color: #28a745; border: 3px solid #28a745;
+            padding: 5px 10px; font-weight: bold; font-size: 1.5rem;
+            transform: rotate(-15deg); opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ticket">
+        <div class="paid-stamp">LUNAS</div>
+
+        <div class="header">
+            <h2>BUKTI PEMBAYARAN</h2>
+            <div th:text="${reservasi.kodeBooking}" style="letter-spacing: 2px;">CODE</div>
+        </div>
+
+        <div class="body">
+            <div class="row">
+                <span class="label">Nama Film</span>
+                <span class="value" th:text="${reservasi.jadwalTayang.film.judul}">JUDUL FILM</span>
+            </div>
+
+            <div class="row">
+                <span class="label">Nama Pemesan</span>
+                <span class="value" th:text="${reservasi.pelanggan.username}">Nama User</span>
+            </div>
+
+            <div class="row">
+                <span class="label">Tanggal Penayangan</span>
+                <span class="value" th:text="${#temporals.format(reservasi.jadwalTayang.waktuMulai, 'dd MMM yyyy, HH:mm')} + ' WIB'">Waktu</span>
+            </div>
+
+            <div class="row">
+                <span class="label">Nomor Studio</span>
+                <span class="value" th:text="'Studio ' + ${reservasi.jadwalTayang.studio.nomorStudio}">Studio 1</span>
+            </div>
+
+            <div class="row">
+                <span class="label">Nomor Kursi</span>
+                <div class="seats">
+                    <span class="badge" th:each="kursi : ${reservasi.kursiDipesan}" 
+                          th:text="${kursi.nomorBaris} + ${kursi.nomorKursi}">A1</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h3 class="enjoy-text">Selamat Menonton!</h3>
+            <a href="/" style="display:block; margin-top:15px; color:#007bff; text-decoration:none; font-family:sans-serif; font-size:0.9rem;">&larr; Kembali ke Beranda</a>
+        </div>
+    </div>
+
+</body>
+</html>

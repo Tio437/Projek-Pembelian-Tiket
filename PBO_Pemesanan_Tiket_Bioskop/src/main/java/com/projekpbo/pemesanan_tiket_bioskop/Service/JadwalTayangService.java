@@ -31,6 +31,10 @@ public class JadwalTayangService {
         return jadwalTayangRepository.findAll();
     }
 
+    public void deleteById(Long id) {
+        jadwalTayangRepository.deleteById(id);
+    }
+
     public Optional<JadwalTayang> findById(Long id) {
         return jadwalTayangRepository.findById(id);
     }

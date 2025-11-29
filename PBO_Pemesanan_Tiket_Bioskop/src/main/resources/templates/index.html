@@ -4,39 +4,118 @@
     <meta charset="UTF-8">
     <title>Bioskop Online</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 20px; }
-        .film-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
-        .film-card { border: 1px solid #ddd; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .film-card-content { padding: 16px; }
-        .film-card h3 { margin-top: 0; }
-        .film-card a { text-decoration: none; background-color: #007bff; color: white; padding: 8px 12px; border-radius: 4px; display: inline-block; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background-color: #f4f4f4; }
+        
+        /* NAVBAR DI ATAS */
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between; /* Judul di kiri, Tombol di kanan */
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .navbar h2 { margin: 0; font-size: 1.5rem; color: #ffc107; } /* Warna Emas */
+        
+        .nav-buttons { display: flex; gap: 15px; }
+        
+        /* GAYA TOMBOL UMUM */
+        .btn {
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+            transition: background 0.3s;
+        }
+        
+        /* TOMBOL HISTORY (YANG ANDA MINTA) */
+        .btn-history {
+            background-color: #007bff; /* Biru */
+            color: white;
+        }
+        .btn-history:hover { background-color: #0056b3; }
+        
+        /* TOMBOL LOGOUT */
+        .btn-logout {
+            background-color: #dc3545; /* Merah */
+            color: white;
+        }
+        .btn-logout:hover { background-color: #c82333; }
+        
+        /* KONTEN FILM */
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        h1 { text-align: center; color: #333; margin-bottom: 30px; }
+        
+        .film-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; }
+        
+        .film-card { 
+            background: white; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
+            transition: transform 0.2s;
+        }
+        .film-card:hover { transform: translateY(-5px); }
+        
+        .film-content { padding: 20px; }
+        .film-title { font-size: 1.2rem; font-weight: bold; margin: 0 0 10px 0; color: #333; }
+        .film-meta { font-size: 0.9em; color: #777; margin-bottom: 15px; }
+        
+        .btn-lihat { 
+            display: block; 
+            text-align: center; 
+            background-color: #28a745; 
+            color: white; 
+            text-decoration: none; 
+            padding: 10px; 
+            border-radius: 5px; 
+            font-weight: bold; 
+        }
+        .btn-lihat:hover { background-color: #218838; }
+
+        .empty-msg { text-align: center; color: #777; font-size: 1.1em; margin-top: 50px; }
     </style>
 </head>
 <body>
 
-    <h1>Film yang Sedang Tayang</h1>
-
-    <div class="film-list" th:if="${!daftarFilm.isEmpty()}">
+    <div class="navbar">
+        <h2>🎬 Bioskop Online</h2>
         
-        <div class="film-card" th:each="film : ${daftarFilm}">
-            
-            <div class="film-card-content">
-                <h3 th:text="${film.judul}">Judul Film</h3>
-                <p th:text="${film.sinopsis}">Ini adalah sinopsis singkat film...</p>
-                <p>
-                    <strong>Durasi:</strong> 
-                    <span th:text="${film.durasiMenit}">120</span> menit
-                </p>
-                
-                <a th:href="@{/film/{id}(id=${film.id})}">
-                    Lihat Jadwal
-                </a>
-            </div>
+        <div class="nav-buttons">
+            <a href="/riwayat-tiket" class="btn btn-history">
+                📜 Riwayat Pesanan
+            </a>
+        <a href="/logout" class="btn btn-logout">Logout</a>
         </div>
     </div>
 
-    <div th:if="${daftarFilm.isEmpty()}">
-        <p>Maaf, belum ada film yang tayang saat ini.</p>
+    <div class="container">
+        <h1>Film yang Sedang Tayang</h1>
+
+        <div class="film-list" th:if="${!daftarFilm.isEmpty()}">
+            
+            <div class="film-card" th:each="film : ${daftarFilm}">
+                <div class="film-content">
+                    <h3 class="film-title" th:text="${film.judul}">Judul Film</h3>
+                    <div class="film-meta">
+                        <span th:text="${film.genre}">Genre</span> | 
+                        <span th:text="${film.durasiMenit} + ' Menit'">120 Menit</span>
+                    </div>
+                    <p th:text="${film.sinopsis}" style="font-size:0.9em; color:#555; height: 60px; overflow: hidden;">Sinopsis...</p>
+                    
+                    <a th:href="@{/film/{id}(id=${film.id})}" class="btn-lihat">
+                        Lihat Jadwal
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="empty-msg" th:if="${daftarFilm.isEmpty()}">
+            <p>Belum ada film yang tayang saat ini.</p>
+        </div>
     </div>
 
 </body>

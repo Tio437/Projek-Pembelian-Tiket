@@ -2,49 +2,56 @@
 <html lang="id" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Admin - Manajemen Studio</title>
+    <title>Admin - Daftar Studio</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 1000px; margin: 20px auto; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 1000px; margin: 20px auto; background-color: #f4f4f4; }
         h1, h2 { color: #333; }
         .container { display: flex; gap: 40px; }
-        .form-section { flex: 1; }
-        .list-section { flex: 2; }
+        .form-section { flex: 1; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); height: fit-content; }
+        .list-section { flex: 2; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         
         /* Form Styling */
-        form { background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; padding: 20px; }
         form div { margin-bottom: 15px; }
         form label { display: block; margin-bottom: 5px; font-weight: bold; }
-        form input[type="text"], form input[type="number"] {
-            width: 95%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;
-        }
-        form button { background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
+        form input[type="number"] { width: 95%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        form button { background-color: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; }
+        form button:hover { background-color: #218838; }
         
         /* Table Styling */
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f4f4f4; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border-bottom: 1px solid #eee; padding: 12px; text-align: left; }
+        th { background-color: #f8f9fa; color: #555; }
+        
+        /* Tombol Aksi */
+        .btn-detail { 
+            text-decoration: none; 
+            background-color: #007bff; 
+            color: white; 
+            padding: 8px 12px; 
+            border-radius: 4px; 
+            font-size: 0.9em; 
+            display: inline-block;
+        }
+        .btn-detail:hover { background-color: #0069d9; }
+        
+        .header-link { margin-bottom: 20px; display: inline-block; text-decoration: none; color: #555; }
     </style>
 </head>
 <body>
 
-    <h1>Panel Admin - Manajemen Studio</h1>
+    <a href="/admin/dashboard" class="header-link">&larr; Kembali ke Dashboard</a>
+
+    <h1>Manajemen Studio</h1>
 
     <div class="container">
         <div class="form-section">
-            <h2>Tambah Studio Baru</h2>
+            <h2>Tambah Studio</h2>
             <form th:action="@{/admin/studios/save}" th:object="${studioBaru}" method="post">
                 <div>
                     <label for="nomorStudio">Nomor Studio:</label>
-                    <input type="number" th:field="*{nomorStudio}" id="nomorStudio" required />
+                    <input type="number" th:field="*{nomorStudio}" id="nomorStudio" required placeholder="Contoh: 1"/>
                 </div>
-                <div>
-                    <label for="kapasitas">Kapasitas Kursi:</label>
-                    <input type="number" th:field="*{kapasitas}" id="kapasitas" required />
-                </div>
-                <div>
-                    <button type="submit">Simpan Studio</button>
-                </div>
+                <button type="submit">+ Simpan Studio</button>
             </form>
         </div>
 
@@ -53,16 +60,36 @@
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nomor Studio</th>
+                        <th>Nomor</th>
                         <th>Kapasitas</th>
-                    </tr>
+                        <th>Aksi</th> </tr>
                 </thead>
                 <tbody>
                     <tr th:each="studio : ${daftarStudio}">
-                        <td th:text="${studio.id}">1</td>
-                        <td th:text="${studio.nomorStudio}">1</td>
-                        <td th:text="${studio.kapasitas} + ' kursi'">100 kursi</td>
+                        <td>
+                            <strong th:text="'Studio ' + ${studio.nomorStudio}">Studio 1</strong>
+                        </td>
+                        <td>
+                            <span th:text="${studio.kapasitas} + ' Kursi'">0 Kursi</span>
+                        </td>
+                        <td style="white-space: nowrap;">
+                            <a th:href="@{/admin/studio/{id}(id=${studio.id})}" class="btn-detail" 
+                               style="margin-right: 5px;">
+                                ⚙️ Atur Kursi
+                            </a>
+
+                            <a th:href="@{/admin/studios/delete/{id}(id=${studio.id})}" 
+                               style="background-color: #dc3545; color: white; padding: 8px 12px; text-decoration: none; border-radius: 4px; font-size: 0.9em; display: inline-block;"
+                               onclick="return confirm('Yakin ingin menghapus studio ini? Semua kursi di dalamnya juga akan terhapus!');">
+                                🗑️ Hapus
+                            </a>
+                        </td>
+                    </tr>
+                    
+                    <tr th:if="${daftarStudio.isEmpty()}">
+                        <td colspan="3" style="text-align: center; color: #777;">
+                            Belum ada studio. Silakan tambah baru.
+                        </td>
                     </tr>
                 </tbody>
             </table>
